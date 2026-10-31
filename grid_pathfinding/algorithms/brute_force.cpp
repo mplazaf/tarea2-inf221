@@ -4,7 +4,7 @@ using namespace std;
 
 typedef long long ll;
 
-struct datosBF {
+struct datosBF{
     int n, m, p;
     const vector<vector<int>>& types;
     const vector<vector<ll>>& values;
@@ -14,10 +14,10 @@ struct datosBF {
 
 void exploreBF(datosBF& datos, int i, int j, int lives, ll score){
     int tipo = datos.types[i][j];
-    if (tipo == 0) {
+    if (tipo == 0){
       return;
     }  
-    if (tipo == -1) {          
+    if (tipo == -1){ 
         lives--;
         score -= datos.p;
         if (lives == 0){
@@ -27,8 +27,8 @@ void exploreBF(datosBF& datos, int i, int j, int lives, ll score){
     else{                          
         score += datos.values[i][j];
     }
-    if (i == datos.n - 1 && j == datos.m - 1) {
-        if (!datos.mejor.found || score > datos.mejor.score) {
+    if (i == datos.n - 1 && j == datos.m - 1){
+        if (!datos.mejor.found || score > datos.mejor.score){
             datos.mejor.found = true;
             datos.mejor.score = score;
             datos.mejor.path = datos.path;
