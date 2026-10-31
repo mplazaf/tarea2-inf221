@@ -13,7 +13,6 @@ struct PathResult {
     int remaining_lives;
 };
 
-// Firmas de los algoritmos definidos en algorithms/
 PathResult solveBruteForce(int n, int m, int v, int p,
                           const std::vector<std::vector<int>>& types,
                           const std::vector<std::vector<long long>>& values);
