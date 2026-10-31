@@ -20,8 +20,11 @@ void exploreBF(datosBF& datos, int i, int j, int lives, ll score){
     if (tipo == -1) {          
         lives--;
         score -= datos.p;
-        if (lives == 0) return;        
-    } else {                          
+        if (lives == 0){
+          return;
+        }
+    } 
+    else{                          
         score += datos.values[i][j];
     }
     if (i == datos.n - 1 && j == datos.m - 1) {
