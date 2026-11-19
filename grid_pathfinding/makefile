@@ -7,7 +7,7 @@ SRCS = grid_pathfinding.cpp \
        algorithms/greedy.cpp
 
 all: exe
-exe: $(SRCS) path_result.h
+exe: $(SRCS) algorithms/path_result.h
 	$(CXX) $(CXXFLAGS) $(SRCS) -o exe
 clean:
 	rm -f exe
