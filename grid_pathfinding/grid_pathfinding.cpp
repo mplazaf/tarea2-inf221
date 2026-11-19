@@ -1,3 +1,9 @@
+// MIGUEL PLAZA FERNANDEZ
+// 202473058-4
+// INF 221 
+// 2026-2
+// TAREA 2  
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

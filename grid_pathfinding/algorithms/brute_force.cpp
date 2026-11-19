@@ -1,3 +1,12 @@
+// MIGUEL PLAZA FERNANDEZ
+// 202473058-4
+// INF-221
+// 2026-2
+// TAREA 2
+
+
+
+
 #include <bits/stdc++.h>
 #include "path_result.h"
 using namespace std;
