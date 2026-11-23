@@ -4,6 +4,14 @@
 // 2026-2
 // TAREA 2
 
+
+// REFERENCIAS
+// - GeeksforGeeks, "Maximum sum path in a matrix from top-left to bottom-right":
+//    programación dinámica bottom-up donde cada celda se alcanza desde la de arriba
+//    o la de la izquierda. La implementación de la tarea se basa en esta pero pero con
+//    una dimensión más por las vidas y con casos especiales para murallas y minas.
+//    https://www.geeksforgeeks.org/maximum-sum-path-in-a-matrix-from-top-left-to-bottom-right/
+
 #include "path_result.h"
 #include<bits/stdc++.h>
 using namespace std;

@@ -5,6 +5,11 @@
 // TAREA 2
 
 
+// Referencias:
+//  - GeeksforGeeks, "Print all possible paths from top left to bottom right of a
+//    mXn matrix": técnica de enumeración recursiva de caminos (derecha/abajo) con
+//    backtracking.
+//    https://www.geeksforgeeks.org/dsa/print-all-possible-paths-from-top-left-to-bottom-right-of-a-mxn-matrix/
 
 
 #include <bits/stdc++.h>
