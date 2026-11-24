@@ -1,146 +1,38 @@
 # Documentación
+Nombre: Miguel Plaza
+Rol: 202473058-4
+Semestre: 2026-2
+TAREA 2 
+ALGORITMOS Y COMPLEJIDAD INF-221
 
 ## Entrega
-
 La entrega se realiza vía **aula.usm.cl** en formato `.zip`.
 
 ## Grid pathfinding
-
-Algoritmos: Fuerza Bruta, Programación Dinámica, Greedy.
-
-Se busca el camino de mayor puntaje desde la celda (1,1) hasta la celda (N,M) de una grilla con murallas y minas, moviéndose solo hacia la derecha (R) o hacia abajo (D) y sin quedarse sin vidas.
-
-### Requisitos
-
-- Linux (la medición de memoria lee `/proc/self/status`).
-- `g++` con soporte para C++17 y `make`.
-- Python 3 con `pandas` y `matplotlib` 
-
-### Estructura
-
-```
-grid_pathfinding/
-├── grid_pathfinding.cpp          Programa principal
-├── makefile
-├── algorithms/
-│   ├── path_result.h             Struct PathResult y firmas de los algoritmos
-│   ├── brute_force.cpp           Fuerza bruta 
-│   ├── dynamic_programming.cpp   DP 
-│   └── greedy.cpp                Greedy
-├── scripts/
-│   ├── grid_generator.py         Generador de grillas de entrada
-│   └── plot_generator.py         Generador de gráficos
-└── data/
-    ├── grid_input/               Grillas de entrada {n}_{m}_{t}_{d}_{s}.txt
-    ├── grid_output/              Caminos encontrados por cada algoritmo
-    ├── measurements/             Mediciones
-    └── plots/                    Gráficos
-```
+Algoritmos: Fuerza Bruta, Programación Dinámica y Greedy.
+- Las fuentes de dónde fueron extraídos los algoritmos, junto con sus decisiones de diseño, están al inicio de sus archivos cpp en la carpeta `algorithms/`.
+- Se usa un archivo `algorithms/path_result.h` que contiene el struct `PathResult` y las firmas de los tres algoritmos, para importarlos a `grid_pathfinding.cpp`.
+- Fuerza Bruta solo se ejecuta en las grillas con N + M ≤ 32. En el resto se ejecutan Programación Dinámica y Greedy.
+- En caso de empate en puntaje, cualquier camino óptimo es válido: Fuerza Bruta conserva el primero encontrado y Programación Dinámica el que termina con menos vidas. Por eso pueden entregar caminos distintos con el mismo puntaje, y la verificación entre ambos compara solo el puntaje.
+- Requisitos: Linux (la memoria se mide leyendo `/proc/self/status`), `g++` con C++17, `make` y Python 3 con `pandas` y `matplotlib`.
 
 ### Programa principal
-
-Todos los comandos se ejecutan desde la carpeta `code/grid_pathfinding/`, porque el programa usa rutas relativas a ella.
-
-**Compilación**
-
-```bash
-cd code/grid_pathfinding
-make
-```
-
-Esto genera el ejecutable `exe`. Para borrarlo, usar `make clean`.
-
-**Ejecución**
-
-```bash
-./exe
-```
-
-El programa recorre todas las grillas de `data/grid_input/` y, para cada una:
-
-1. Ejecuta Fuerza Bruta (sólo si N + M ≤ 32), Programación Dinámica y Greedy.
-2. Mide el tiempo y la memoria de cada algoritmo.
-3. Verifica que Fuerza Bruta y Programación Dinámica obtengan el mismo puntaje.
-4. Guarda los resultados en `data/grid_output/` y `data/measurements/`.
-
-Al final muestra un resumen con la cantidad de grillas procesadas y la cantidad de grillas con error o con discrepancia entre Fuerza Bruta y Programación Dinámica (debe ser 0). Con las 288 grillas la ejecución tarda unos pocos minutos; lo más lento es Fuerza Bruta en las grillas de 16×16.
-
-También se puede procesar una sola grilla, por ejemplo para probarla:
-
-```bash
-./exe data/grid_input/4_4_libre_D10_a.txt
-```
-
-En ese caso las filas se agregan al final de los CSV existentes. Para regenerar los CSV desde cero se ejecuta `./exe` sin argumentos.
-
-**Salidas en `data/grid_output/`**
-
-Un archivo `{n}_{m}_{t}_{d}_{s}_{alg}_out.txt` por grilla y algoritmo, con `alg` ∈ {`bruteforce`, `dp`, `greedy`}. Contiene el puntaje, la secuencia de movimientos y las vidas restantes:
-
-```
-29
-RRRRDDD
-1
-```
-
-o bien la única línea `SIN SOLUCION` si el algoritmo no encontró un camino válido.
-
-**Mediciones en `data/measurements/`**
-
-- `mediciones.csv`: una fila por grilla y algoritmo.
-
-  | Columna | Descripción |
-  |---|---|
-  | `n`, `m`, `tipo`, `dominio`, `muestra` | Datos de la grilla, sacados del nombre del archivo |
-  | `algoritmo` | `bruteforce`, `dp` o `greedy` |
-  | `tiempo_ms` | Tiempo promedio por ejecución, en milisegundos |
-  | `memoria_kb` | Peak de memoria extra durante la ejecución, en KB |
-  | `repeticiones` | Veces que se ejecutó el algoritmo para promediar el tiempo |
-  | `encontrado` | 1 si encontró un camino válido, 0 si no |
-  | `puntaje`, `vidas` | Puntaje y vidas restantes (vacíos si no encontró camino) |
-
-- `greedy_calidad.csv`: una fila por grilla, con `puntaje_optimo` (el de Programación Dinámica), `greedy_encontrado`, `puntaje_greedy` y `brecha` = s(C\*) − s(C_greedy). La brecha queda vacía cuando greedy no encuentra camino.
-
-**Cómo se mide**
-
-- *Tiempo:* con `std::chrono::steady_clock`. Si una ejecución tarda menos de 50 ms, se repite (hasta 1000 veces) y se promedia.
-- *Memoria:* con los datos que Linux entrega en `/proc/self/status`. Antes de cada algoritmo se reinicia el peak de memoria (`VmHWM`) y se anota el uso actual (`VmRSS`); la memoria del algoritmo es la diferencia. Cada grilla se procesa en un proceso nuevo (el programa se llama a sí mismo con `system`) para que la memoria liberada por grillas anteriores no afecte la medición. La resolución es de páginas de 4 KB, por lo que Fuerza Bruta y Greedy, que usan memoria O(N + M), se miden como 0 KB.
+- Todos los comandos se ejecutan desde la carpeta `code/grid_pathfinding/`, ya que el programa usa rutas relativas a ella.
+- Compilación: escribir en terminal "make". Use "make clean" para eliminar el ejecutable.
+- Ejecución: escribir el comando en terminal "./exe". Se procesan todas las grillas de `data/grid_input/`.
+- Para procesar una sola grilla: "./exe data/grid_input/nombre.txt". Sus resultados se agregan al final de los CSV existentes.
+- Al ejecutarse, los caminos encontrados por cada algoritmo se guardan en `data/grid_output/` y las mediciones en `data/measurements/`:
+  - `mediciones.csv`: tiempo (ms), memoria (KB), puntaje y vidas de cada algoritmo en cada grilla.
+  - `greedy_calidad.csv`: puntaje óptimo, puntaje de greedy y brecha en cada grilla.
+- Al terminar se muestra un resumen con las grillas procesadas y las discrepancias entre Fuerza Bruta y Programación Dinámica, que debe ser 0.
+- El tiempo se mide con `std::chrono`, repitiendo y promediando las ejecuciones de menos de 50 ms. La memoria se mide como el peak de memoria (`VmHWM`) menos el uso inicial (`VmRSS`); cada grilla se procesa en un proceso nuevo para que la memoria de grillas anteriores no afecte la medición.
 
 ### Scripts
+- Para ejecutar los archivos de la carpeta scripts, ejecute el comando "python3 scripts/nombrearchivo.py" desde `code/grid_pathfinding/`.
+- Tras ejecutar "python3 scripts/grid_generator.py", las grillas serán guardadas en el directorio `data/grid_input`.
+- Tras ejecutar "python3 scripts/plot_generator.py" (después de "./exe"), los gráficos serán guardados en el directorio `data/plots` y se imprimirán en consola tablas resumen de tiempo, memoria, brecha y tasa de falla.
 
-**Generación de grillas**
-
-```bash
-python3 scripts/grid_generator.py
-```
-
-Genera las grillas de entrada en `data/grid_input/`. Se deben generar las 288 instancias (6 valores de N × 2 de M × 4 tipos × 2 dominios × 3 muestras) antes de ejecutar `./exe`.
-
-**Generación de gráficos**
-
-```bash
-python3 scripts/plot_generator.py
-```
-
-Lee los CSV de `data/measurements/` (por lo tanto, se ejecuta después de `./exe`) y guarda en `data/plots/`:
-
-| Archivo | Contenido |
-|---|---|
-| `tiempo_vs_tamano.png` | Tiempo promedio vs N·M de los tres algoritmos, un panel por tipo de grilla |
-| `memoria_vs_tamano.png` | Memoria vs N·M de los tres algoritmos, junto a la memoria teórica de Programación Dinámica |
-| `brecha_greedy.png` | Brecha promedio de greedy por tamaño y tipo de grilla, un panel por dominio |
-| `falla_greedy.png` | Tasa de falla de greedy por tipo de grilla y dominio, y por tamaño |
-
-Además imprime en consola tablas resumen de tiempo, memoria, tasa de falla y brecha.
-
-### Ejecución completa
-
-```bash
-cd code/grid_pathfinding
-python3 scripts/grid_generator.py   # solo si data/grid_input/ está vacía
-make
-./exe
-python3 scripts/plot_generator.py
-```
-
-# tarea2-inf221
+## Informe
+- El informe se encuentra en la carpeta `report/`, y sus referencias en `report/references.bib`.
+- Las figuras del informe se toman directamente de `code/grid_pathfinding/data/plots/`, por lo que corresponden a las generadas por `plot_generator.py` a partir de las mediciones.
+- El enlace al manual de la GNU C Library citado en el informe (https://www.gnu.org/software/libc/manual/html_node/Malloc-Tunable-Parameters.html) redirige automáticamente a la nueva ubicación del manual en https://sourceware.org/glibc/manual/. La sección consultada es "Malloc Tunable Parameters".
